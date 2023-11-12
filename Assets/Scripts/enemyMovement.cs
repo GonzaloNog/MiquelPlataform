@@ -5,6 +5,7 @@ public class EnemyMovement : MonoBehaviour
     public float moveSpeed = 3f;
     public Transform groundCheck;
     public LayerMask groundLayer;
+    public LayerMask playerLayer; // Agrega una capa para SuperGirl
 
     private Rigidbody2D rb;
     private bool isFacingRight = true;
@@ -35,8 +36,18 @@ public class EnemyMovement : MonoBehaviour
     void ChangeDirection()
     {
         isFacingRight = !isFacingRight;
-
-        // Cambiar la dirección del sprite sin cambiar la escala
         spriteRenderer.flipX = !isFacingRight;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("SuperGirl"))
+        {
+            // Cambiar la dirección del Orco al chocar con SuperGirl
+            ChangeDirection();
+
+            // Aplicar fuerza al Orco para hacerlo rebotar
+            rb.velocity = new Vector2((isFacingRight ? 1 : -1) * moveSpeed, rb.velocity.y);
+        }
     }
 }
