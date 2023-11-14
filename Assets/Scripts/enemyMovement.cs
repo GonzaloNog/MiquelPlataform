@@ -6,6 +6,7 @@ public class EnemyMovement : MonoBehaviour
     public Transform groundCheck;
     public LayerMask groundLayer;
     public LayerMask playerLayer; // Agrega una capa para SuperGirl
+    public bool isLive = true;
 
     private Rigidbody2D rb;
     private bool isFacingRight = true;
@@ -24,8 +25,8 @@ public class EnemyMovement : MonoBehaviour
 
         if (!hasGroundInDirection && isGrounded)
             ChangeDirection();
-
-        Move();
+        if(isLive)
+            Move();
     }
 
     void Move()
@@ -43,11 +44,18 @@ public class EnemyMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("SuperGirl"))
         {
-            // Cambiar la dirección del Orco al chocar con SuperGirl
-            ChangeDirection();
-
-            // Aplicar fuerza al Orco para hacerlo rebotar
-            rb.velocity = new Vector2((isFacingRight ? 1 : -1) * moveSpeed, rb.velocity.y);
+            if (LevelManager.instance.getCharacterControler().getIsDead())
+            {
+                ChangeDirection();
+                rb.velocity = new Vector2((isFacingRight ? 1 : -1) * moveSpeed, rb.velocity.y);
+            }
+            else
+            {
+                if (isLive)
+                {
+                    LevelManager.instance.getCharacterControler().CharacterDead();
+                }
+            }
         }
     }
 }

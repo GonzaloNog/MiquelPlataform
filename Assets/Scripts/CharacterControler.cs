@@ -5,8 +5,12 @@ using UnityEngine;
 public class CharacterControler : MonoBehaviour
 {
     [Header("Player Skills")]
-    public float moveSpeed = 1f;
+    public float moveSpeed = 5f;
+    public float runSpeed = 10f;
     public float jumpForce = 5f;
+    private float speed;
+    private bool shiftJump = false;
+    private float finalJump = 5f;
 
     [Header("Layer")]
     public Transform groundCheck;
@@ -38,18 +42,23 @@ public class CharacterControler : MonoBehaviour
             float horizontalInput = Input.GetAxis("Horizontal");
 
             Vector2 movement = new Vector2(horizontalInput, 0).normalized;
-
-            moveSpeed = Input.GetKey(KeyCode.LeftShift) ? 10f : 5f;
-            rb.velocity = new Vector2(movement.x * moveSpeed, rb.velocity.y);
+            if(isGrounded)
+                speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : moveSpeed;
+            rb.velocity = new Vector2(movement.x * speed, rb.velocity.y);
 
             if (isGrounded && Input.GetKeyDown(KeyCode.Space))
             {
-                rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+                shiftJump = Input.GetKey(KeyCode.LeftShift) ? true : false;
+                if (shiftJump)
+                    finalJump = jumpForce * 1.5f;
+                else
+                    finalJump = jumpForce;
+                rb.AddForce(new Vector2(0, finalJump), ForceMode2D.Impulse);
             }
 
             SetAnimationState();
 
-            dirX = Input.GetAxisRaw("Horizontal") * moveSpeed;
+            dirX = Input.GetAxisRaw("Horizontal") * speed;
 
             if (dirX < 0)
             {
@@ -84,7 +93,7 @@ public class CharacterControler : MonoBehaviour
         anim.SetBool("isWalking", !anim.GetBool("isRunning") && Mathf.Abs(dirX) > 0);
         anim.SetBool("isJumping", !isGrounded);
     }
-
+    /*
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("enemy") && !isDead)
@@ -93,5 +102,14 @@ public class CharacterControler : MonoBehaviour
             isDead = true;
             anim.SetBool("isDead", true);
         }
+    }*/
+    public void CharacterDead()
+    {
+        isDead = true;
+        anim.SetBool("isDead", true);
+    }
+    public bool getIsDead()
+    {
+        return isDead;
     }
 }
