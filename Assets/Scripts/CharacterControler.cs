@@ -33,7 +33,7 @@ public class CharacterControler : MonoBehaviour
     {
         if (!isDead)
         {
-            isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.3f, groundLayer);
+            isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
 
             float horizontalInput = Input.GetAxis("Horizontal");
 
@@ -44,7 +44,6 @@ public class CharacterControler : MonoBehaviour
 
             if (isGrounded && Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.Log("jump");
                 rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             }
 

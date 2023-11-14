@@ -6,6 +6,7 @@ TagManager:
   tags:
   - enemy
   - SuperGirl
+  - CoinBox
   layers:
   - Default
   - TransparentFX
