@@ -23,7 +23,6 @@ public class CharacterControler : MonoBehaviour
     float dirX;
     Animator anim;
     bool isDead;
-    bool hasDied;  // Nueva variable para controlar si ya ha muerto
     SpriteRenderer spriteRenderer;
 
     void Start()
@@ -50,7 +49,7 @@ public class CharacterControler : MonoBehaviour
             {
                 shiftJump = Input.GetKey(KeyCode.LeftShift) ? true : false;
                 if (shiftJump)
-                    finalJump = jumpForce * 1.5f;
+                    finalJump = jumpForce * 1.2f;
                 else
                     finalJump = jumpForce;
                 rb.AddForce(new Vector2(0, finalJump), ForceMode2D.Impulse);
@@ -78,11 +77,10 @@ public class CharacterControler : MonoBehaviour
     void SetAnimationState()
     {
         // Verificar si ya ha muerto y la animación de muerte no ha comenzado
-        if (isDead && !hasDied)
+        if (isDead)
         {
             // Realizar acciones de muerte (reproducir animación, mostrar mensaje, etc.)
             anim.SetBool("isDead", true);
-            hasDied = true;  // Marcar que la animación de muerte ya ha comenzado
             rb.velocity = Vector2.zero;  // Detener el movimiento al morir
             rb.gravityScale = 0;  // Desactivar la gravedad al morir
             return;  // Salir de la función para evitar que se ejecute el resto de la lógica
@@ -108,6 +106,7 @@ public class CharacterControler : MonoBehaviour
         isDead = true;
         anim.SetBool("isDead", true);
     }
+    
     public bool getIsDead()
     {
         return isDead;
