@@ -10,6 +10,17 @@ public class CoinBox : MonoBehaviour
 
     private bool isActivated = false;
     private SpriteRenderer spriteRenderer;
+    private PointsManager pointsManager;
+
+    private void Awake()
+    {
+        pointsManager = FindObjectOfType<PointsManager>();
+        if (pointsManager == null)
+        {
+            Debug.LogError("No se encontró una instancia de PointsManager en la escena.");
+        }
+    }
+   
 
     void Start()
     {
@@ -28,6 +39,7 @@ public class CoinBox : MonoBehaviour
 
             // Mueve la caja hacia arriba y luego vuelve a su posición
             StartCoroutine(MoveBox());
+            pointsManager.IncrementarPuntuacion(1);
         }
     }
 
