@@ -15,6 +15,7 @@ public class EnemyMovement : MonoBehaviour
     Animator anim;
     bool isDead = false;
     bool hasExecutedDeathAnimation = false;  // Nueva variable
+    private bool deadChange = false;
 
     void Start()
     {
@@ -51,6 +52,7 @@ public class EnemyMovement : MonoBehaviour
         spriteRenderer.flipX = !isFacingRight;
     }
 
+    /*
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("SuperGirl"))
@@ -71,8 +73,38 @@ public class EnemyMovement : MonoBehaviour
             }
         }
     }
-
-
+    */
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("SuperGirl"))
+        {
+            if (LevelManager.instance.getCharacterControler().getIsDead())
+            {
+                if (!deadChange)
+                {
+                    Debug.Log("Muerto " + isDead);
+                    ChangeDirection();  // Cambiar dirección solo si Supergirl está muerta
+                    rb.velocity = new Vector2((isFacingRight ? 1 : -1) * moveSpeed, rb.velocity.y);
+                    deadChange = true;
+                }
+            }
+            else
+            {
+                if (isLive)
+                {
+                    Debug.Log("te has morio");
+                    LevelManager.instance.getCharacterControler().CharacterDead();
+                }
+            }
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (LevelManager.instance.getCharacterControler().getIsDead())
+        {
+            deadChange = false;
+        }
+    }
     void SetAnimationState()
     {
         if (!isLive && !hasExecutedDeathAnimation)

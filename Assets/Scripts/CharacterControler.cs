@@ -105,10 +105,20 @@ public class CharacterControler : MonoBehaviour
     {
         isDead = true;
         anim.SetBool("isDead", true);
+        LevelManager.instance.setGameOver(true);
     }
     
     public bool getIsDead()
     {
         return isDead;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "BoxDead")
+        {
+            CharacterDead();
+            LevelManager.instance.setGameOver(true);
+        }
     }
 }
