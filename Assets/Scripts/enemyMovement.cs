@@ -52,28 +52,15 @@ public class EnemyMovement : MonoBehaviour
         spriteRenderer.flipX = !isFacingRight;
     }
 
-    /*
+    
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("SuperGirl"))
+        if (collision.gameObject.CompareTag("enemy"))
         {
-            if (LevelManager.instance.getCharacterControler().getIsDead())
-            {
-                Debug.Log("Muerto "+isDead);
-                ChangeDirection();  // Cambiar dirección solo si Supergirl está muerta
-                rb.velocity = new Vector2((isFacingRight ? 1 : -1) * moveSpeed, rb.velocity.y);
-            }
-            else
-            {
-                if (isLive)
-                {
-                    Debug.Log("te has morio");
-                    LevelManager.instance.getCharacterControler().CharacterDead();
-                }
-            }
+            ChangeDirection();
         }
     }
-    */
+    
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("SuperGirl"))
