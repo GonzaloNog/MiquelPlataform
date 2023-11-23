@@ -11,6 +11,8 @@ public class CharacterControler : MonoBehaviour
     private float speed;
     private bool shiftJump = false;
     private float finalJump = 5f;
+    public float upwardForceOnKill = 2f; 
+
 
     [Header("Layer")]
     public Transform groundCheck;
@@ -83,7 +85,7 @@ public class CharacterControler : MonoBehaviour
             anim.SetBool("isDead", true);
             rb.velocity = Vector2.zero;  // Detener el movimiento al morir
             rb.gravityScale = 0;  // Desactivar la gravedad al morir
-            return;  // Salir de la función para evitar que se ejecute el resto de la lógica
+            return; 
         }
 
         // Resto de la lógica de animación
@@ -91,16 +93,24 @@ public class CharacterControler : MonoBehaviour
         anim.SetBool("isWalking", !anim.GetBool("isRunning") && Mathf.Abs(dirX) > 0);
         anim.SetBool("isJumping", !isGrounded);
     }
-    /*
+
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("enemy") && !isDead)
+        if (collision.gameObject.CompareTag("enemy"))
         {
-            // SuperGirl choca con el Ogro, activa la muerte
-            isDead = true;
-            anim.SetBool("isDead", true);
+
+            // Aplica una pequeña fuerza hacia arriba a SuperGirl al matar al orco
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, 0f); // Detén la velocidad vertical actual
+                rb.AddForce(new Vector2(0f, upwardForceOnKill), ForceMode2D.Impulse);
+            }
         }
-    }*/
+
+    }
+
+
     public void CharacterDead()
     {
         isDead = true;

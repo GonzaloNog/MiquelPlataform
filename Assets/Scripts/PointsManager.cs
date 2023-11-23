@@ -8,7 +8,6 @@ public class PointsManager : MonoBehaviour
 
     void Start()
     {
-        // Asegúrate de que el objeto Text esté asignado desde el Inspector
         if (puntuacionText != null)
         {
             ActualizarPuntuacionText();

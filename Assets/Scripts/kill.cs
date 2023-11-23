@@ -13,6 +13,7 @@ public class kill : MonoBehaviour
             target.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
             target.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             this.GetComponent<CircleCollider2D>().enabled = false;
+            LevelManager.instance.setPoints(2);
         }
     }
 }

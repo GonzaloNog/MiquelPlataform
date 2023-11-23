@@ -14,7 +14,7 @@ public class EnemyMovement : MonoBehaviour
 
     Animator anim;
     bool isDead = false;
-    bool hasExecutedDeathAnimation = false;  // Nueva variable
+    bool hasExecutedDeathAnimation = false;
     private bool deadChange = false;
 
     void Start()
@@ -69,7 +69,6 @@ public class EnemyMovement : MonoBehaviour
             {
                 if (!deadChange)
                 {
-                    Debug.Log("Muerto " + isDead);
                     ChangeDirection();  // Cambiar dirección solo si Supergirl está muerta
                     rb.velocity = new Vector2((isFacingRight ? 1 : -1) * moveSpeed, rb.velocity.y);
                     deadChange = true;
@@ -79,7 +78,6 @@ public class EnemyMovement : MonoBehaviour
             {
                 if (isLive)
                 {
-                    Debug.Log("te has morio");
                     LevelManager.instance.getCharacterControler().CharacterDead();
                 }
             }
@@ -97,8 +95,7 @@ public class EnemyMovement : MonoBehaviour
         if (!isLive && !hasExecutedDeathAnimation)
         {
             anim.SetBool("isDead", true);
-            hasExecutedDeathAnimation = true;  // Marcar que la animación ha sido ejecutada
-            Debug.Log("MUERTO");
+            hasExecutedDeathAnimation = true;  
             return;
         }
     }
