@@ -8,6 +8,8 @@ TagManager:
   - SuperGirl
   - CoinBox
   - BoxDead
+  - flag
+  - levelFinish
   layers:
   - Default
   - TransparentFX

@@ -31,7 +31,9 @@ public class CoinBox : MonoBehaviour
 
             // Mueve la caja hacia arriba y luego vuelve a su posición
             StartCoroutine(MoveBox());
+            LevelManager.instance.am.newSFX("coin");
             LevelManager.instance.setPoints(1);
+            LevelManager.instance.setCoins(LevelManager.instance.getCoins() + 1);
         }
     }
 

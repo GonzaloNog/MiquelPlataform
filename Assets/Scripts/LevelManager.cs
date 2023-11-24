@@ -9,12 +9,15 @@ public class LevelManager : MonoBehaviour
     public static LevelManager instance;
     public CharacterControler player;
     public UIManager ui;
-    public AudioManager audioManager;
-    public TextMeshProUGUI textoTiempo; 
+    public AudioManager am;
+
     public float tiempoTotal = 60f;
     private float tiempoRestante;
+    private float timeUpdateControl;
     private int points;
+    private int coins;
     private bool gameOver = false;
+    private bool gameWin = false;
 
     private void Awake()
     {
@@ -30,17 +33,28 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        coins = 0;
         tiempoRestante = tiempoTotal;
+        timeUpdateControl = tiempoTotal;
     }
 
     private void Update()
     {
-        tiempoRestante -= Time.deltaTime;
-        textoTiempo.text = "Time: " + Mathf.CeilToInt(tiempoRestante).ToString() + "s";
-        if(tiempoRestante <= 0f && !gameOver)
+        if(tiempoRestante >= 0 && !gameWin)
         {
-            setGameOver(true);
-            tiempoRestante = 0;
+            tiempoRestante -= Time.deltaTime;
+
+            if(tiempoRestante < timeUpdateControl && tiempoRestante > (timeUpdateControl - 1))
+            {
+                timeUpdateControl--;
+                ui.UpdateUI();
+            }
+            if (tiempoRestante <= 0f && !gameOver)
+            {
+                setGameOver(true);
+                Time.timeScale = 0;
+                tiempoRestante = 0;
+            }
         }
     }
 
@@ -56,8 +70,15 @@ public class LevelManager : MonoBehaviour
     }
     public void setPoints(int _points)
     {
-        points += _points;
-        ui.UpdateUI();
+        if(_points > 1)
+        {
+            StartCoroutine(newPointsAnim(_points));
+        }
+        else
+        {
+            points += _points;
+            ui.UpdateUI();
+        }       
     }
 
     public bool getGameOver()
@@ -67,7 +88,45 @@ public class LevelManager : MonoBehaviour
     public void setGameOver(bool _gameOver)
     {
         gameOver = _gameOver;
+        if(gameOver)
+            am.newSFX("lose");
         ui.UpdateUI();
+    }
+
+    public int getCoins()
+    {
+        return coins;
+    }
+    public void setCoins(int _coins)
+    {
+        coins = _coins;
+    }
+
+    public float getTimeRestante()
+    {
+        return tiempoRestante;
+    }
+    public void setWin(bool win)
+    {
+        gameWin = win;
+    }
+    public bool getWin()
+    {
+        return gameWin;
+    }
+
+    IEnumerator newPointsAnim(int _points)
+    {
+        int temp = points;
+        float timeMode = 0.05f;
+        if (_points < 5)
+            timeMode = 0.2f;
+        while((_points + temp) > points)
+        {
+            points++;
+            ui.UpdateUI();
+            yield return new WaitForSeconds(timeMode);
+        }
     }
 
 }

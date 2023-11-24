@@ -14,6 +14,7 @@ public class kill : MonoBehaviour
             target.gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             this.GetComponent<CircleCollider2D>().enabled = false;
             LevelManager.instance.setPoints(2);
+            LevelManager.instance.am.newSFX("enemyDead");
         }
     }
 }

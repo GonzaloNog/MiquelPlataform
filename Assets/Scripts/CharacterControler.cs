@@ -36,44 +36,49 @@ public class CharacterControler : MonoBehaviour
 
     void Update()
     {
-        if (!isDead)
+        if (!LevelManager.instance.getGameOver())
         {
-            isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-
-            float horizontalInput = Input.GetAxis("Horizontal");
-
-            Vector2 movement = new Vector2(horizontalInput, 0).normalized;
-            if(isGrounded)
-                speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : moveSpeed;
-            rb.velocity = new Vector2(movement.x * speed, rb.velocity.y);
-
-            if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+            if (!isDead)
             {
-                shiftJump = Input.GetKey(KeyCode.LeftShift) ? true : false;
-                if (shiftJump)
-                    finalJump = jumpForce * 1.2f;
+                isGrounded = Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+
+                float horizontalInput = Input.GetAxis("Horizontal");
+
+                Vector2 movement = new Vector2(horizontalInput, 0).normalized;
+                if (isGrounded)
+                    speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : moveSpeed;
+                rb.velocity = new Vector2(movement.x * speed, rb.velocity.y);
+
+                if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+                {
+                    shiftJump = Input.GetKey(KeyCode.LeftShift) ? true : false;
+                    if (shiftJump)
+                        finalJump = jumpForce * 1.2f;
+                    else
+                        finalJump = jumpForce;
+                    rb.AddForce(new Vector2(0, finalJump), ForceMode2D.Impulse);
+                    LevelManager.instance.am.newSFX("jump");
+                }
+
+                SetAnimationState();
+
+                dirX = Input.GetAxisRaw("Horizontal") * speed;
+
+                if (dirX < 0)
+                {
+                    spriteRenderer.flipX = true;
+                }
+                else if (dirX > 0)
+                {
+                    spriteRenderer.flipX = false;
+                }
                 else
-                    finalJump = jumpForce;
-                rb.AddForce(new Vector2(0, finalJump), ForceMode2D.Impulse);
-            }
-
-            SetAnimationState();
-
-            dirX = Input.GetAxisRaw("Horizontal") * speed;
-
-            if (dirX < 0)
-            {
-                spriteRenderer.flipX = true;
-            }
-            else if (dirX > 0)
-            {
-                spriteRenderer.flipX = false;
-            }
-            else
-            {
-                rb.velocity = new Vector2(0, rb.velocity.y);
+                {
+                    rb.velocity = new Vector2(0, rb.velocity.y);
+                }
             }
         }
+        
     }
 
     void SetAnimationState()
@@ -96,23 +101,26 @@ public class CharacterControler : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("enemy"))
+        if (!LevelManager.instance.getGameOver())
         {
-
-            // Aplica una pequeña fuerza hacia arriba a SuperGirl al matar al orco
-            Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            if (rb != null)
+            if (collision.gameObject.CompareTag("enemy"))
             {
-                rb.velocity = new Vector2(rb.velocity.x, 0f); // Detén la velocidad vertical actual
-                rb.AddForce(new Vector2(0f, upwardForceOnKill), ForceMode2D.Impulse);
+
+                // Aplica una pequeña fuerza hacia arriba a SuperGirl al matar al orco
+                Rigidbody2D rb = GetComponent<Rigidbody2D>();
+                if (rb != null)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, 0f); // Detén la velocidad vertical actual
+                    rb.AddForce(new Vector2(0f, upwardForceOnKill), ForceMode2D.Impulse);
+                }
             }
         }
-
     }
 
 
     public void CharacterDead()
     {
+        LevelManager.instance.am.newSFX("dead");
         isDead = true;
         anim.SetBool("isDead", true);
         LevelManager.instance.setGameOver(true);
@@ -129,6 +137,14 @@ public class CharacterControler : MonoBehaviour
         {
             CharacterDead();
             LevelManager.instance.setGameOver(true);
+        }
+        if(collision.tag == "levelFinish")
+        {
+            Debug.Log("levelFinish");
+            if (LevelManager.instance.getWin())
+            {
+                LevelManager.instance.ui.WinUI();
+            }
         }
     }
 }

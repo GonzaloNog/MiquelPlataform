@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private float musicVolum = 1;
+    private float musicVolum = 0.1f;
     private float sfxVolume = 1;
 
     public static GameManager instance;
