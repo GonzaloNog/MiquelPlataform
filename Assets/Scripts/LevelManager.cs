@@ -2,15 +2,20 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
     public CharacterControler player;
     public UIManager ui;
-    public AudioManager audio;
+    public AudioManager audioManager;
+    public TextMeshProUGUI textoTiempo; 
+    public float tiempoTotal = 60f;
+    private float tiempoRestante;
     private int points;
     private bool gameOver = false;
+
     private void Awake()
     {
         if (instance == null)
@@ -22,6 +27,23 @@ public class LevelManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void Start()
+    {
+        tiempoRestante = tiempoTotal;
+    }
+
+    private void Update()
+    {
+        tiempoRestante -= Time.deltaTime;
+        textoTiempo.text = "Time: " + Mathf.CeilToInt(tiempoRestante).ToString() + "s";
+        if(tiempoRestante <= 0f && !gameOver)
+        {
+            setGameOver(true);
+            tiempoRestante = 0;
+        }
+    }
+
     public CharacterControler getCharacterControler()
     {
         return player;
