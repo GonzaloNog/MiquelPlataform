@@ -17,6 +17,7 @@ public class Flag : MonoBehaviour
             anim.SetBool("Win", true);
             LevelManager.instance.setPoints(Mathf.RoundToInt(LevelManager.instance.getTimeRestante()));
             LevelManager.instance.setWin(true);
+            LevelManager.instance.am.newSFX("win");
         }
         StartCoroutine(animeFinish());
     }

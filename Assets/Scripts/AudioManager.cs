@@ -5,6 +5,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public AudioClip musica;
+    public AudioClip musicaWin;
     public AudioClip jump;
     public AudioClip dead;
     public AudioClip win;
@@ -26,12 +27,10 @@ public class AudioManager : MonoBehaviour
 
     public void newSFX(string efectName)
     {
-        Debug.Log("New SFX");
         SFX.Stop();
         switch (efectName)
         {
             case "jump":
-                Debug.Log("jumpsSFX");
                 SFX.clip = jump;
                 break;
             case "dead":

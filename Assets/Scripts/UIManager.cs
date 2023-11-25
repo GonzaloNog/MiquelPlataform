@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI finalScore;
     public GameObject gameOverPanel;
     public GameObject winPanel;
+
     void Start()
     {
         winPanel.SetActive(false);
@@ -25,7 +26,7 @@ public class UIManager : MonoBehaviour
     {
         score.text = "Score: " + LevelManager.instance.getPoints();
         textoTiempo.text = "Time: " + Mathf.CeilToInt(LevelManager.instance.getTimeRestante()).ToString() + "s";
-        coins.text = "Coins: " + LevelManager.instance.getCoins();
+        coins.text = "" + LevelManager.instance.getCoins();
         gameOverPanel.SetActive(LevelManager.instance.getGameOver());
     }
     public void WinUI()
